@@ -19,17 +19,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         
-        
+        // constant to check if app has been launched
         let hasLaunched = UserDefaults.standard.bool(forKey: "hasLaunched")
+        
         self.window = UIWindow(frame: UIScreen.main.bounds)
+        
         let launchStoryboard = UIStoryboard(name: "Access", bundle: nil)
         let mainStoryboard   = UIStoryboard(name: "Main", bundle: nil)
         
         var vc: UIViewController
         
+        // go staright to the main page if it has been launched before
         if hasLaunched {
             vc = mainStoryboard.instantiateInitialViewController()!
         }
+        
+        // go to the notification page if app hasnt been launched before
         else {
             vc = launchStoryboard.instantiateViewController(withIdentifier: "startController")
             
@@ -47,6 +52,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
         
     }
+    
+    /*
+     xcode generated code i might need to use in the future
+     */
     
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -12,11 +12,12 @@ import UIKit
 
 class FunSettingsController: UITableViewController {
     
+    // ViewController is the class name for the main page, this will allow me to use the struct i made to get information from there to this controller
     let fromMainController = ViewController.self
     
     @IBOutlet weak var modeCells: UITableView!
     
-    // Declare main variables so I dont have to write them down again.
+    // Declare switch constants so I dont have to write them down again.
     let jordanSwitch  = UISwitch(frame: .zero)
     let ethanSwitch   = UISwitch(frame: .zero)
     let rileeSwitch   = UISwitch(frame: .zero)
@@ -25,7 +26,7 @@ class FunSettingsController: UITableViewController {
     let verboseSwitch = UISwitch(frame: .zero)
     
     
-    
+    // saves all userdefault settings so i can save writing more code
     func SaveAll() {
         UserDefaults.standard.setValue(verboseSwitch.isOn,  forKeyPath: "verboseStateFun")
         UserDefaults.standard.setValue(jordanSwitch.isOn,   forKeyPath: "jordanStateFun")
@@ -54,6 +55,7 @@ class FunSettingsController: UITableViewController {
         return "Fun settings do not affect performance in any way."
     }
     
+    // Sets the tableview cells to 55px
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 55.00
     }
@@ -71,6 +73,7 @@ class FunSettingsController: UITableViewController {
 
             ethanSwitch.tag = indexPath.row
             
+            // sets a target which is ethanSwitchChanged, this means it will run the code from the ethanSwitchChanged function when the switch is changed on this cell
             ethanSwitch.addTarget(self, action: #selector(self.ethanSwitchChanged(_:)), for: .valueChanged)
             
             ethanCell.accessoryView = ethanSwitch
@@ -83,6 +86,7 @@ class FunSettingsController: UITableViewController {
             
             rileeSwitch.tag = indexPath.row
             
+            // sets a target which is rileeSwitchChanged, this means it will run the code from the rileeSwitchChanged function when the switch is changed on this cell
             rileeSwitch.addTarget(self, action: #selector(self.rileeSwitchChanged(_:)), for: .valueChanged)
             
             rileeCell.accessoryView = rileeSwitch
@@ -96,6 +100,7 @@ class FunSettingsController: UITableViewController {
             
             jacobSwitch.tag = indexPath.row
             
+            // sets a target which is jacobSwitchChanged, this means it will run the code from the jacobSwitchChanged function when the switch is changed on this cell
             jacobSwitch.addTarget(self, action: #selector(self.jacobSwitchChanged(_:)),for: .valueChanged)
             
             jacobCell.accessoryView = jacobSwitch
@@ -107,6 +112,7 @@ class FunSettingsController: UITableViewController {
             
             kodeeSwitch.tag = indexPath.row
             
+            // sets a target which is kodeeSwitchChanged, this means it will run the code from the kodeeSwitchChanged function when the switch is changed on this cell
             kodeeSwitch.addTarget(self, action: #selector(self.kodeeSwitchChanged(_:)), for: .valueChanged)
             kodeeCell.accessoryView = kodeeSwitch
             
@@ -125,7 +131,7 @@ class FunSettingsController: UITableViewController {
             
             jordanSwitch.tag = indexPath.row
             
-            // Specifies which function will be working with this switch., which is the 'jordanSwitchChanged' function.
+            // sets a target which is jordanSwitchChanged, this means it will run the code from the jordanSwitchChanged function when the switch is changed on this cell
             jordanSwitch.addTarget(self, action: #selector(self.jordanSwitchChanged(_:)), for: .valueChanged)
             
             jordanCell.accessoryView = jordanSwitch
@@ -146,7 +152,7 @@ class FunSettingsController: UITableViewController {
             
             verboseSwitch.tag = indexPath.row
             
-            // Specifies which function will be working with this switch., which is the 'jordanSwitchChanged' function.
+            // sets a target which is verboseSwitchChanged, this means it will run the code from the verboseSwitchChanged function when the switch is changed on this cell
             verboseSwitch.addTarget(self, action: #selector(self.verboseSwitchChanged(_:)), for: .valueChanged)
             
             verboseCell.accessoryView = verboseSwitch
@@ -154,7 +160,7 @@ class FunSettingsController: UITableViewController {
             // return the cell inside the table view.
             return verboseCell
             
-        // If none of the above cant be displayed for some reason, just return UITableViewCell()
+        // If none of the above cant be displayed for some reason, just return a table view cell
         default:
             return UITableViewCell()
         }
@@ -162,10 +168,11 @@ class FunSettingsController: UITableViewController {
     }
     
     
-    // Print if the switch actually worked.
+    // function that operates the code when jordan switch is changed.
     @objc func jordanSwitchChanged(_ sender: UISwitch!) {
         UserDefaults.standard.setValue(jordanSwitch.isOn, forKeyPath: "jordanStateFun")
         
+        // if switch true then print on, if its false then print off
         if UserDefaults.standard.bool(forKey: "jordanStateFun") == true {
             print("jordan mode is ON")
         }
@@ -175,10 +182,13 @@ class FunSettingsController: UITableViewController {
         SaveAll()
         UserDefaults.standard.synchronize()
     }
+    // function that operates the code when ethan switch is changed.
     @objc func ethanSwitchChanged(_ sender: UISwitch!) {
+        
+        // creates a value for when ethanSwitch is set to true or false on the switch
         UserDefaults.standard.setValue(ethanSwitch.isOn, forKeyPath: "ethanStateFun")
         
-        
+        // if switch true then print on, if its false then print off
         if UserDefaults.standard.bool(forKey: "ethanStateFun") == true {
             
             print("ethan mode is ON")
@@ -199,9 +209,12 @@ class FunSettingsController: UITableViewController {
         SaveAll()
         UserDefaults.standard.synchronize()
     }
+    // function that operates the code when rilee switch is changed.
     @objc func rileeSwitchChanged(_ sender: UISwitch!) {
-        
+        // creates a value for when rileeSwitch is set to true or false on the switch
         UserDefaults.standard.setValue(rileeSwitch.isOn, forKeyPath: "rileeStateFun")
+        
+        // if switch true then print on, if its false then print off
         if UserDefaults.standard.bool(forKey: "rileeStateFun") == true {
             print("rilee mode is ON")
         }
@@ -222,8 +235,13 @@ class FunSettingsController: UITableViewController {
         UserDefaults.standard.synchronize()
         
     }
+    // function that operates the code when jacob switch is changed.
     @objc func jacobSwitchChanged(_ sender: UISwitch!) {
+        
+        // creates a value for when jacobSwitch is set to true or false on the switch
         UserDefaults.standard.setValue(jacobSwitch.isOn, forKeyPath: "jacobStateFun")
+        
+        // if switch true then print on, if its false then print off
          if UserDefaults.standard.bool(forKey: "jacobStateFun") == true {
              print("jacob mode is ON")
          }
@@ -244,8 +262,13 @@ class FunSettingsController: UITableViewController {
          SaveAll()
          UserDefaults.standard.synchronize()
     }
+    // function that operates the code when kodee switch is changed.
     @objc func kodeeSwitchChanged(_ sender: UISwitch!) {
+        
+        // creates a value for when kodeeSwitch is set to true or false on the switch
         UserDefaults.standard.setValue(kodeeSwitch.isOn, forKeyPath: "kodeeStateFun")
+        
+        // if switch true then print on, if its false then print off
         if UserDefaults.standard.bool(forKey: "kodeeStateFun") == true {
             print("kodee mode is ON")
         }
@@ -264,8 +287,13 @@ class FunSettingsController: UITableViewController {
         SaveAll()
         
     }
+    // function that operates the code when verbose switch is changed.
     @objc func verboseSwitchChanged(_ sender: UISwitch!) {
+        
+        // creates a value for when verboseSwitch is set to true or false on the switch
         UserDefaults.standard.setValue(verboseSwitch.isOn, forKeyPath: "verboseStateFun")
+        
+        // if switch true then print on, if its false then print off
         if UserDefaults.standard.bool(forKey: "verboseStateFun") == true {
             
             print("verbose mode is ON")
@@ -283,6 +311,7 @@ class FunSettingsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // gets information from the struct in ViewController and sets the onTintColor on the switches
         jordanSwitch.onTintColor  = fromMainController.colors.trackColor
         verboseSwitch.onTintColor = fromMainController.colors.trackColor
         ethanSwitch.onTintColor   = fromMainController.colors.trackColor
@@ -290,6 +319,7 @@ class FunSettingsController: UITableViewController {
         jacobSwitch.onTintColor   = fromMainController.colors.trackColor
         kodeeSwitch.onTintColor   = fromMainController.colors.trackColor
         
+        // if userdefaults was set to true on each switch then load true when view controller loads
         jordanSwitch.isOn         = UserDefaults.standard.bool(forKey: "jordanStateFun")
         ethanSwitch.isOn          = UserDefaults.standard.bool(forKey: "ethanStateFun")
         verboseSwitch.isOn        = UserDefaults.standard.bool(forKey: "verboseStateFun")

@@ -26,6 +26,7 @@ import RPCircularProgress
 
 class ViewController: UIViewController {
     
+    // struct that defines the trackColor for the On tint in the FunSettingsController
     struct colors {
         static let trackColor = UIColor(red: 23/255.0, green: 18/255.0, blue: 240/255.0, alpha: 1.0)
     }
@@ -58,6 +59,7 @@ class ViewController: UIViewController {
     // Timer variable to show time in Verbose mode.
     let timestamp = DateFormatter.localizedString(from: NSDate() as Date, dateStyle: .full, timeStyle: .full)
     
+    // Constant that stores the shared user notification center object
     let notificationCenter = UNUserNotificationCenter.current()
 
     
@@ -74,62 +76,80 @@ class ViewController: UIViewController {
     
     // Show interstitial video ad
     func showVideoAdOnConnect() {
+        
     interstitial.present(fromRootViewController: self)
+        
         logWindow.text += "\n[+] Successfully loaded interstitial ad."
     }
     
-    // Connect to VPN function.
+    // When user clicks on the "Connect" button everything in this function will run
     @IBAction func ConnectToVPN(_ sender: Any) {
-       
-        //timer under connect button.
         
+        // start the timer that displays inside the button
         timerisRunning = true
+        
+        // function that stores all the code for the timer
         func startTimer() {
+            
+            // Date() provides methods for creating dates, comparing dates and calculating time intervals between dates.
             let startTime = Date()
+            
+            // this creates an unnamed variable as I do not need to customize is again in the future. It makes a scheduled timer where every 1 second it updates. Repeats means that it will repeat the iteration again every 1 second, if false it will just stop at the first second
             _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+                
                 let now = Date()
+                
+                
                 let components = Calendar.current.dateComponents([.hour, .minute, .second], from: startTime, to: now)
                 
                 let hoursPortion = components.hour
                 let minutesPortion = components.minute
                 let secondsPortion = components.second
                 
-               
+               // sets the format of the timer as 00:00:00 (hour:minutes:seconds)
                 self.timerLabel.text = String(format: "%02i:%02i:%02i",hoursPortion!, minutesPortion!, secondsPortion!)
                 
             }
         }
         startTimer()
       
-        
+        // while it is connecting, it will disable the the user from clicking on it
         ConnectToVPN.isUserInteractionEnabled = false
+        
+        // display text as below in the UIToolbar
         serverLocation?.title = "Location: Masterton, New Zealand"
+        
+        // change the color of the rings in the circle
         progressRingAbove?.progressTintColor            = UIColor(red: 23/255.0, green: 18/255.0, blue: 240/255.0, alpha: 1.0)
         progressRing?.progressTintColor                 = UIColor(red: 23/255.0, green: 18/255.0, blue: 240/255.0, alpha: 1.0)
         progressRingAbove?.trackTintColor               = UIColor(red: 23/255.0, green: 18/255.0, blue: 240/255.0, alpha: 0.0)
         progressRing?.trackTintColor                    = UIColor(red: 23/255.0, green: 18/255.0, blue: 240/255.0, alpha: 0.0)
         
-        
+        // change the "Connect" text to "Connecting"
         VPNLabel?.text = "Connecting"
             
-        
+        // Show the timer inside the circle
         self.timerLabel.isHidden = false
             
-            
+        // after 7 seconds, all this code will be run.
         _ = Timer.scheduledTimer(withTimeInterval: 7.0, repeats: false) { timerConnect in
             
-           // timer.invalidate()
-            
+            //change colours of the circles
             self.progressRingAbove?.trackTintColor   = UIColor(red: 23/255.0, green: 18/255.0, blue: 240/255.0, alpha: 1.0)
             self.progressRing?.trackTintColor        = UIColor(red: 23/255.0, green: 18/255.0, blue: 240/255.0, alpha: 1.0)
+            
+            //stop the cricles from spinning indeterminately
             self.progressRing.enableIndeterminate(false)
             self.progressRingAbove.enableIndeterminate(false)
                 
                 
-                
+            // just display below in the UIToolbar (just a placeholder until server is setup)
             self.serverLocation?.title = "Error: Timed out."
-                
+            
+            // It will show that the there was an error connecting to the server inside the log window if verbose mode is turned on (just a placeholder until server is setup)
             self.logWindow?.text += "\n[-] Error connecting to server: Timed out.\n"
+            
+            // display that vpn is ready to connect again after it encountered an error
             self.logWindow?.text += "\n[+] WaiVPN is ready to connect."
             self.VPNLabel?.text = "Connect"
             
@@ -137,21 +157,12 @@ class ViewController: UIViewController {
             //change this to true once vpn is functional
             self.timerLabel?.isHidden = false
             
-            
+            // make the connect button clickable again after 7 seconds
             self.ConnectToVPN?.isUserInteractionEnabled = true
                 
            
         }
             
-        
-        
-
-        
-        func disconnectTimer() {
-            _ = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) { timer in
-                self.VPNLabel.text = "Disconnecting"
-            }
-        }
         
         // What the log window will look like when I set up the server.
         logWindow?.text += "\n -------------------------------------------------\n"
@@ -159,44 +170,54 @@ class ViewController: UIViewController {
         logWindow?.text += "\n[+] Pinging 104.908.889.1 at 1ms\n"
         
        
-        
-        
-        
-
         // Trigger haptic touch when user clicks on Connect.
         if #available(iOS 13.0, *) {
+        // Only use the 'rigid' strength if user is on ios 13
+            
+            // set a constant that stores the feedback stength.
             let feedback = UIImpactFeedbackGenerator(style: .rigid)
+            
+            // i do not know why it needs to prepare just before occuring but thats what documentation says to do.
             feedback.prepare()
+            
+            // do the feedback
             feedback.impactOccurred()
         }
+            
         else {
-
+        // if user is on any ios below 13, use the heavy feedback strength
+            
+            // set a constant that stores the feedback strength
             let feedback = UIImpactFeedbackGenerator(style: .heavy)
             feedback.prepare()
             feedback.impactOccurred()
         }
             
-    
-        
-        
-        
         self.progressRing?.enableIndeterminate()
         self.progressRingAbove?.enableIndeterminate()
+        
         self.progressRing?.indeterminateDuration      = 1.0
         self.progressRingAbove?.indeterminateDuration = 1.0
         
         
         
-        // Play jordans car noises
+        // Play jordans car noises (fun settings)
         let pathToSound = Bundle.main.path(forResource: "jordanCarNoise", ofType: "mp3")
+        
+        // store the path of where the file is stored
         let url = URL(fileURLWithPath: pathToSound!)
+        
+        // if switch is on in fun settings table view controller then do these lines below
         if UserDefaults.standard.bool(forKey: "jordanStateFun") == true {
             logWindow?.text += "\n[+] Playing jordanCarNoise.mp3\n"
+            
+            // try and play the .mp3
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
                 audioPlayer.play()
             }
-                
+            
+            // if it could not play .mp3 for any reason give an error in the console
             catch {
                 print("couldnt play jordans car noises: \(error)")
                 
@@ -206,37 +227,34 @@ class ViewController: UIViewController {
  
     }
     
-    @IBAction func settingsButton(_ sender: Any) {
-        let feedback = UIImpactFeedbackGenerator(style: .medium)
-        feedback.prepare()
-        feedback.impactOccurred()
-    }
-    // when view controller loads do these
+    // when view controller appears run the code in this function
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
-        
-        
         
         serverLocation?.title = "Location: Masterton, New Zealand"
          
         let content = UNMutableNotificationContent()
-        content.title = "Exited app"
-        content.body = "Exit: 10.0 seconds"
         
+        // after 10 seconds, display a notification (only works when the app is closed)
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
-            
+        
+        //
+        let request = UNNotificationRequest(identifier: "notification", content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
         
-        
+        // if user chooses udp as protocol, change protocolstate title in nav bar to "UDP"
         if UserDefaults.standard.bool(forKey: "udpState") == true {
             protocolState.title = "UDP"
-            
         }
+        
+        // else, change to TCP
         else {
             protocolState.title = "TCP"
         }
+        
+        // display notification when app closes (just a debug thing)
+        content.title = "Exited app"
+        content.body = "Exit: 10.0 seconds"
         
         
         if UserDefaults.standard.bool(forKey: "rileeStateFun") {
@@ -273,34 +291,50 @@ class ViewController: UIViewController {
         // If user is on iOS 12+ it will use NWPathMonitor to check if user on a internet connection. This will be updated once I get a server up and running.
         if #available(iOS 12.0, *)
         {
+            
+            // NWPathMonitor allows the device to monitor and react to network changes
             let monitor = NWPathMonitor()
+            
+            // creates a new dispatch queue, a dispatch queue allows management of tasks on the main or background thread
             let queue = DispatchQueue(label: "InternetConnectionMonitor")
 
             
                 monitor.pathUpdateHandler = { pathUpdateHandler in
+                    
+                    // if device has internet or lte ON
                     if pathUpdateHandler.status == .satisfied {
                         print("Internet connection is on.")
                         
                     }
+                    
+                    // if decvice has no internet or lte
                     else {
                         print("There's no internet connection.")
                         self.logWindow?.text += "\n[-] You are not connected to a internet connection."
                         
+                        // displays an alert controller to say internet connecrion coukd not be found
                         let alert = UIAlertController(title: "Could not find an internet connection", message: "Please connect to a network in order to connect."  , preferredStyle: .alert)
+                        
+                        // add 'ok' button to the alert controller
                         let ok = UIAlertAction(title: "Ok", style: .default, handler: nil)
                         alert.addAction(ok)
+                        
+                        // present alert controller to the screen
                         self.present(alert, animated: true)
                     }
                 }
-
+                
+                
                 monitor.start(queue: queue)
-        } else {
-            // Fallback on earlier versions
         }
         
+        // hide the timer
         timerLabel?.isHidden = true
         
+        // thickness of circle
         progressRing?.thicknessRatio = 0.02
+        
+        
         progressRingAbove?.trackTintColor = UIColor(red: 23/255.0, green: 18/255.0, blue: 240/255.0, alpha: 1.0)
         progressRing?.trackTintColor      = UIColor(red: 23/255.0, green: 18/255.0, blue: 240/255.0, alpha: 1.0)
            
